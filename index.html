@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Uso de Agua en la casa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #00c853;
+            --light-bg: #f8f9fa;
+            --dark-text: #202124;
+            --light-text: #ffffff;
+            --border: #dadce0;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #e3f2fd;
+            color: var(--dark-text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--light-text);
+            padding: 30px 25px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .water-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: wave 3s infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .survey-section {
+            padding: 30px;
+        }
+        
+        .intro {
+            background: var(--light-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .intro h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .question-group {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .question-group:last-child {
+            border-bottom: none;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--light-bg);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .question-title .number {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .option {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .option label {
+            display: block;
+            padding: 15px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option input[type="radio"]:checked + label,
+        .option input[type="checkbox"]:checked + label {
+            background: #e3f2fd;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+        
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            display: none;
+        }
+        
+        .number-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 300px;
+        }
+        
+        .number-input input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .number-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .results-section {
+            background: var(--light-bg);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .total-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        
+        .comparison {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .comparison-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            min-width: 150px;
+        }
+        
+        .comparison-item i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light-bg);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #5f6368;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        @media (max-width: 600px) {
+            .options-container {
+                flex-direction: column;
+            }
+            
+            .option {
+                min-width: 100%;
+            }
+            
+            .comparison {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="water-icon">
+                <i class="fas fa-faucet"></i>
+            </div>
+            <h1>Encuesta de Uso de Agua en la casa.</h1>
+            <p>Esta encuesta es anónima, por favor contestar con seriedad.</p>
+        </header>
+        
+        <section class="survey-section">
+            <div class="intro">
+                <h2><i class="fas fa-info-circle"></i> Instrucciones</h2>
+                <p>Responder las preguntas, al final podrás ver cuanta agua has usado. recuerda enviar los resultados o guardarlos.</p>
+            </div>
+            
+            <form id="water-survey"></form>
+            
+            <div class="results-section">
+                <h2><i class="fas fa-calculator"></i> Tu Consumo Estimado</h2>
+                <p>Litros de agua utilizados diariamente:</p>
+                <div class="total-display" id="total-display">0 L</div>
+                
+                <div class="comparison">
+                    <div class="comparison-item">
+                        <i class="fas fa-swimming-pool"></i>
+                        <p>Piscinas inflables (2.000 L)</p>
+                        <h3 id="pools-comparison">0</h3>
+                    </div>
+                    <div class="comparison-item">
+                        <i class="fas fa-swimmer"></i>
+                        <p>Piscinas olímpicas (2.500.000 L)</p>
+                        <h3 id="olympic-comparison">0</h3>
+                    </div>
+                    <div class="comparison-item">
+                        <i class="fas fa-shower"></i>
+                        <p>Duchas de 5 min (50 L)</p>
+                        <h3 id="showers-comparison">0</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button type="button" class="btn btn-primary" id="calculate-btn">
+                    <i class="fas fa-calculator"></i> Calcular Consumo
+                </button>
+                <button type="button" class="btn btn-secondary" id="send-btn">
+                    <i class="fas fa-paper-plane"></i> Enviar Resultados
+                </button>
+                <button type="button" class="btn btn-secondary" id="save-btn">
+                    <i class="fas fa-save"></i> Guardar Archivo
+                </button>
+                <button type="button" class="btn btn-secondary" id="reset-btn">
+                    <i class="fas fa-redo"></i> Reiniciar Encuesta
+                </button>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Esta encuesta fué hecha por Benjamín Amenábar y Cristobal Cerda.</p>
+        </footer>
+    </div>
+
+<script>
+/* --- PREGUNTAS --- (idéntico a tu script original con lógica incluida) */
+const questions = [
+    {
+        id: "q2",
+        type: "number",
+        text: "*¿Cuántos minutos al día usas el lavamanos en total?",
+        required: true,
+        points: 8,
+        unit: "minutos"
+    },
+    {
+        id: "q3",
+        type: "number",
+        text: "*¿Cuántas veces al día jalas la cadena del inodoro?",
+        required: true,
+        points: 9,
+        unit: "veces"
+    },
+    {
+        id: "q4",
+        type: "radio",
+        text: "*¿Tienes lavavajillas?",
+        required: true,
+        points: [0, 0],
+        alternatives: [
+            { text: "Sí", value: "yes" },
+            { text: "No", value: "no" }
+        ],
+        showIf: { questionId: "q4", answer: "yes" },
+        dynamicQuestion: {
+            id: "q4a",
+            type: "number",
+            text: "¿Cuántos ciclos de lavavajillas realizas al día?",
+            points: 12,
+            unit: "ciclos"
+        }
+    },
+    {
+        id: "q5",
+        type: "number",
+        text: "*¿Cuántas cargas de lavadora realizas a la semana?",
+        required: true,
+        points: 60/7,
+        unit: "cargas/semana"
+    },
+    {
+        id: "q6",
+        type: "radio",
+        text: "*¿Tienes sistema de aguas grises?",
+        required: true,
+        points: [0, 0],
+        alternatives: [
+            { text: "Sí", value: "yes" },
+            { text: "No", value: "no" }
+        ],
+        multiplier: true,
+        multiplierValues: [0.6, 1]
+    },
+    {
+        id: "q7",
+        type: "number",
+        text: "¿Cuántos metros cuadrados de jardín riegas?",
+        required: false,
+        points: 8,
+        unit: "m²"
+    },
+    {
+        id: "q8",
+        type: "checkbox",
+        text: "¿Qué medidas de ahorro de agua aplicas? (Selecciona todas las que apliquen)",
+        required: false,
+        alternatives: [
+            { text: "Cierre del grifo al lavarse los dientes", value: "tap-off" },
+            { text: "Recolección de agua de lluvia", value: "rainwater" },
+            { text: "Aireadores en grifos y duchas eficientes", value: "low_flow"},
+            { text: "Inodoros de doble descarga / eficientes", value: "dual-flush"}
+        ],
+        multiplier : true,
+        multiplierValues: [0.99, 0.75, 0.85, 0.8]
+    },
+    {
+        id: "q9",
+        type: "radio",
+        text: "*¿Tienes piscina?",
+        required: true,
+        points: [0, 0],
+        alternatives: [
+            { text: "Sí", value: "yes" },
+            { text: "No", value: "no" }
+        ],
+        showIf: { questionId: "q9", answer: "yes" },
+        dynamicQuestions: [
+            {
+                id: "q9a",
+                type: "number",
+                text: "¿Cuál es el largo de tu piscina en metros?",
+                unit: "m"
+            },
+            {
+                id: "q9b",
+                type: "number",
+                text: "¿Cuál es el ancho de tu piscina en metros?",
+                unit: "m"
+            },
+            {
+                id: "q9c",
+                type: "number",
+                text: "¿Cuál es la profundidad promedio de tu piscina en metros?",
+                unit: "m"
+            }
+        ],
+        poolConsumptionRate: 30 / 7
+    }
+];
+
+let currentTotal = 0;
+let multiplier = 1;
+let answers = {};
+
+document.addEventListener('DOMContentLoaded', function () {
+    renderSurvey();
+    document.getElementById('calculate-btn').addEventListener('click', calculateTotal);
+    document.getElementById('send-btn').addEventListener('click', sendResults);
+    document.getElementById('save-btn').addEventListener('click', saveResults);
+    document.getElementById('reset-btn').addEventListener('click', resetSurvey);
+});
+
+function renderSurvey() {
+    const form = document.getElementById('water-survey');
+    form.innerHTML = '';
+    questions.forEach((question, index) => {
+        const questionGroup = document.createElement('div');
+        questionGroup.className = 'question-group';
+        questionGroup.id = `group-${question.id}`;
+
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'question';
+        const title = document.createElement('div');
+        title.className = 'question-title';
+        title.innerHTML = `<span class="number">${index + 1}</span><span>${question.text}</span>`;
+        questionDiv.appendChild(title);
+
+        if (question.type === 'radio') {
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'options-container';
+            question.alternatives.forEach((alt, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `
+                    <input type="radio" id="${question.id}-${alt.value}" name="${question.id}" value="${alt.value}" data-points="${question.points[i]}" ${question.multiplier ? `data-multiplier="${question.multiplierValues[i]}"` : ''}>
+                    <label for="${question.id}-${alt.value}">${alt.text}</label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+            questionDiv.appendChild(optionsContainer);
+        } else if (question.type === 'checkbox') {
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'options-container';
+            question.alternatives.forEach((alt, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `
+                    <input type="checkbox" id="${question.id}-${alt.value}" name="${question.id}" value="${alt.value}" data-multiplier="${question.multiplierValues[i]}">
+                    <label for="${question.id}-${alt.value}">${alt.text}</label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+            questionDiv.appendChild(optionsContainer);
+        } else if (question.type === 'number') {
+            const inputDiv = document.createElement('div');
+            inputDiv.className = 'number-input';
+            inputDiv.innerHTML = `<input type="number" id="${question.id}" min="0" step="0.1" placeholder="0"><span>${question.unit}</span>`;
+            questionDiv.appendChild(inputDiv);
+        }
+
+        questionGroup.appendChild(questionDiv);
+
+        if (question.dynamicQuestion) {
+            const dynDiv = document.createElement('div');
+            dynDiv.id = `dynamic-${question.dynamicQuestion.id}`;
+            dynDiv.className = 'question hidden';
+            dynDiv.innerHTML = `
+                <div class="question-title">
+                    <span class="number">${index + 1}a</span>
+                    <span>${question.dynamicQuestion.text}</span>
+                </div>
+                <div class="number-input">
+                    <input type="number" id="${question.dynamicQuestion.id}" min="0" step="1" placeholder="0">
+                    <span>${question.dynamicQuestion.unit}</span>
+                </div>
+            `;
+            questionGroup.appendChild(dynDiv);
+        }
+
+        if (question.dynamicQuestions) {
+            question.dynamicQuestions.forEach((dyn, j) => {
+                const dynDiv = document.createElement('div');
+                dynDiv.id = `dynamic-${dyn.id}`;
+                dynDiv.className = 'question hidden';
+                dynDiv.innerHTML = `
+                    <div class="question-title">
+                        <span class="number">${index + 1}${String.fromCharCode(97 + j)}</span>
+                        <span>${dyn.text}</span>
+                    </div>
+                    <div class="number-input">
+                        <input type="number" id="${dyn.id}" min="0" step="0.1" placeholder="0">
+                        <span>${dyn.unit}</span>
+                    </div>
+                `;
+                questionGroup.appendChild(dynDiv);
+            });
+        }
+
+        form.appendChild(questionGroup);
+    });
+
+    form.addEventListener('change', handleChange);
+}
+
+function handleChange(e) {
+    const target = e.target;
+    if (target.type === 'radio') {
+        const questionId = target.name;
+        answers[questionId] = target.value;
+        if (questions.find(q => q.id === questionId && q.dynamicQuestion)) {
+            const dynQ = questions.find(q => q.id === questionId).dynamicQuestion;
+            const dynDiv = document.getElementById(`dynamic-${dynQ.id}`);
+            if (target.value === "yes") {
+                dynDiv.classList.remove('hidden');
+            } else {
+                dynDiv.classList.add('hidden');
+                document.getElementById(dynQ.id).value = '';
+            }
+        }
+        if (questions.find(q => q.id === questionId && q.dynamicQuestions)) {
+            const dynQs = questions.find(q => q.id === questionId).dynamicQuestions;
+            dynQs.forEach(dynQ => {
+                const dynDiv = document.getElementById(`dynamic-${dynQ.id}`);
+                if (target.value === "yes") {
+                    dynDiv.classList.remove('hidden');
+                } else {
+                    dynDiv.classList.add('hidden');
+                    document.getElementById(dynQ.id).value = '';
+                }
+            });
+        }
+    } else if (target.type === 'number') {
+        answers[target.id] = parseFloat(target.value) || 0;
+    } else if (target.type === 'checkbox') {
+        const checkedBoxes = document.querySelectorAll(`input[name="${target.name}"]:checked`);
+        answers[target.name] = Array.from(checkedBoxes).map(cb => cb.value);
+    }
+}
+
+function calculateTotal() {
+    currentTotal = 0;
+    multiplier = 1;
+    questions.forEach(question => {
+        if (question.type === 'number') {
+            const value = parseFloat(document.getElementById(question.id)?.value) || 0;
+            answers[question.id] = value;
+            currentTotal += value * question.points;
+        } else if (question.type === 'radio') {
+            const selected = document.querySelector(`input[name="${question.id}"]:checked`);
+            if (selected) {
+                answers[question.id] = selected.value;
+                const points = parseFloat(selected.getAttribute('data-points')) || 0;
+                currentTotal += points;
+                if (question.multiplier) {
+                    multiplier *= parseFloat(selected.getAttribute('data-multiplier')) || 1;
+                }
+                if (question.dynamicQuestion && selected.value === "yes") {
+                    const dynValue = parseFloat(document.getElementById(question.dynamicQuestion.id)?.value) || 0;
+                    answers[question.dynamicQuestion.id] = dynValue;
+                    currentTotal += dynValue * question.dynamicQuestion.points;
+                }
+                if (question.dynamicQuestions && selected.value === "yes") {
+                    const length = parseFloat(document.getElementById("q9a")?.value) || 0;
+                    const width = parseFloat(document.getElementById("q9b")?.value) || 0;
+                    const depth = parseFloat(document.getElementById("q9c")?.value) || 0;
+                    const volume = length * width * depth;
+                    if (volume > 0) {
+                        currentTotal += volume * question.poolConsumptionRate;
+                    }
+                }
+            }
+        } else if (question.type === 'checkbox') {
+            const selectedBoxes = document.querySelectorAll(`input[name="${question.id}"]:checked`);
+            let tempMultiplier = 1;
+            selectedBoxes.forEach(cb => {
+                tempMultiplier *= parseFloat(cb.getAttribute('data-multiplier')) || 1;
+            });
+            multiplier *= tempMultiplier;
+            answers[question.id] = Array.from(selectedBoxes).map(cb => cb.value);
+        }
+    });
+
+    currentTotal *= multiplier;
+
+    document.getElementById('total-display').textContent = currentTotal.toFixed(0) + " L";
+    document.getElementById('pools-comparison').textContent = (currentTotal / 2000).toFixed(1);
+    document.getElementById('olympic-comparison').textContent = (currentTotal / 2500000).toFixed(4);
+    document.getElementById('showers-comparison').textContent = (currentTotal / 50).toFixed(1);
+}
+
+function sendResults() {
+    if (currentTotal === 0) {
+        alert("Por favor, primero calcula tu consumo usando el botón 'Calcular Consumo'");
+        return;
+    }
+
+    let mailtoLink = "mailto:?subject=Resultados Encuesta Uso de Agua&body=";
+    mailtoLink += "Resultados de la encuesta:%0D%0A";
+    questions.forEach(q => {
+        if (answers[q.id] !== undefined) {
+            const answer = Array.isArray(answers[q.id]) ? answers[q.id].join(', ') : answers[q.id];
+            mailtoLink += `${q.text}: ${answer}%0D%0A`;
+        }
+        if (q.dynamicQuestion && answers[q.dynamicQuestion.id] !== undefined) {
+            mailtoLink += `${q.dynamicQuestion.text}: ${answers[q.dynamicQuestion.id]}%0D%0A`;
+        }
+        if (q.dynamicQuestions) {
+            q.dynamicQuestions.forEach(dq => {
+                if (answers[dq.id] !== undefined) {
+                    mailtoLink += `${dq.text}: ${answers[dq.id]}%0D%0A`;
+                }
+            });
+        }
+    });
+    mailtoLink += `%0D%0AConsumo total diario: ${currentTotal.toFixed(0)} litros`;
+    window.location.href = mailtoLink;
+}
+
+function saveResults() {
+    if (currentTotal === 0) {
+        alert("Por favor, primero calcula tu consumo usando el botón 'Calcular Consumo'");
+        return;
+    }
+
+    let csvContent = "Pregunta,Respuesta\n";
+    questions.forEach(q => {
+        if (answers[q.id] !== undefined) {
+            const answer = Array.isArray(answers[q.id]) ? answers[q.id].join(', ') : answers[q.id];
+            csvContent += `"${q.text}","${answer}"\n`;
+        }
+        if (q.dynamicQuestion && answers[q.dynamicQuestion.id] !== undefined) {
+            csvContent += `"${q.dynamicQuestion.text}","${answers[q.dynamicQuestion.id]}"\n`;
+        }
+        if (q.dynamicQuestions) {
+            q.dynamicQuestions.forEach(dq => {
+                if (answers[dq.id] !== undefined) {
+                    csvContent += `"${dq.text}","${answers[dq.id]}"\n`;
+                }
+            });
+        }
+    });
+    csvContent += `"Consumo total diario","${currentTotal.toFixed(0)} litros"\n`;
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "resultados_encuesta_agua.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function resetSurvey() {
+    if (confirm("¿Seguro que quieres reiniciar la encuesta?")) {
+        document.getElementById('water-survey').reset();
+        currentTotal = 0;
+        multiplier = 1;
+        answers = {};
+        document.getElementById('total-display').textContent = "0 L";
+        document.getElementById('pools-comparison').textContent = "0";
+        document.getElementById('olympic-comparison').textContent = "0";
+        document.getElementById('showers-comparison').textContent = "0";
+    }
+}
+</script>
+</body>
+</html>
