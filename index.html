@@ -664,34 +664,51 @@ function calculateTotal() {
     document.getElementById('showers-comparison').textContent = (currentTotal / 50).toFixed(1);
 }
 
-function sendResults() {
+async function sendResults() {
     if (currentTotal === 0) {
         alert("Por favor, primero calcula tu consumo usando el botón 'Calcular Consumo'");
         return;
     }
 
-    let mailtoLink = "mailto:?subject=Resultados Encuesta Uso de Agua&body=";
-    mailtoLink += "Resultados de la encuesta:%0D%0A";
+    let bodyText = "Resultados de la encuesta:\n";
     questions.forEach(q => {
         if (answers[q.id] !== undefined) {
             const answer = Array.isArray(answers[q.id]) ? answers[q.id].join(', ') : answers[q.id];
-            mailtoLink += `${q.text}: ${answer}%0D%0A`;
+            bodyText += `${q.text}: ${answer}\n`;
         }
         if (q.dynamicQuestion && answers[q.dynamicQuestion.id] !== undefined) {
-            mailtoLink += `${q.dynamicQuestion.text}: ${answers[q.dynamicQuestion.id]}%0D%0A`;
+            bodyText += `${q.dynamicQuestion.text}: ${answers[q.dynamicQuestion.id]}\n`;
         }
         if (q.dynamicQuestions) {
             q.dynamicQuestions.forEach(dq => {
                 if (answers[dq.id] !== undefined) {
-                    mailtoLink += `${dq.text}: ${answers[dq.id]}%0D%0A`;
+                    bodyText += `${dq.text}: ${answers[dq.id]}\n`;
                 }
             });
         }
     });
-    mailtoLink += `%0D%0AConsumo total diario: ${currentTotal.toFixed(0)} litros`;
-    window.location.href = mailtoLink;
-}
+    bodyText += `\nConsumo total diario: ${currentTotal.toFixed(0)} litros`;
 
+    // Enviar el trigger al workflow de GitHub
+    const token = "TU_PERSONAL_ACCESS_TOKEN"; // ⚠️ NO DEBE ESTAR EN CLIENTE FINAL
+
+    await fetch("https://api.github.com/repos/USUARIO/REPO/actions/workflows/send_email.yml/dispatches", {
+        method: "POST",
+        headers: {
+            "Accept": "application/vnd.github+json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+            ref: "main",
+            inputs: {
+                subject: "Resultados Encuesta Uso de Agua",
+                body: bodyText
+            }
+        })
+    });
+
+    alert("Los resultados han sido enviados correctamente.");
+}
 function saveResults() {
     if (currentTotal === 0) {
         alert("Por favor, primero calcula tu consumo usando el botón 'Calcular Consumo'");

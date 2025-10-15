@@ -1,0 +1,28 @@
+name: Send Survey Email
+
+on:
+  workflow_dispatch:
+    inputs:
+      subject:
+        description: 'Asunto del correo'
+        required: true
+      body:
+        description: 'Cuerpo del correo'
+        required: true
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Email
+        uses: hilarion5/send-mail@v1
+        with:
+          smtp-server: smtp.gmail.com
+          smtp-port: 465
+          smtp-secure: true
+          from-email: ${{ secrets.SMTP_EMAIL }}
+          to-email: "tucorreo@ejemplo.com"
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: ${{ github.event.inputs.subject }}
+          body: ${{ github.event.inputs.body }}

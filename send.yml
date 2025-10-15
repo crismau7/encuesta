@@ -1,0 +1,27 @@
+name: Send file by email
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send_email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Send file via email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USER }}
+          password: ${{ secrets.MAIL_PASS }}
+          subject: "Archivo generado por GitHub Actions"
+          to: ${{ secrets.MAIL_TO }}
+          from: ${{ secrets.MAIL_USER }}
+          body: |
+            Hola,
+            Este es el archivo enviado automáticamente por el repositorio.
+          attachments: |
+            path/al/archivo.zip
