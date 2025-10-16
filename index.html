@@ -308,7 +308,7 @@
         <section class="survey-section">
             <div class="intro">
                 <h2><i class="fas fa-info-circle"></i> Instrucciones</h2>
-                <p>Responder las preguntas, al final podrás ver cuanta agua has usado. recuerda enviar los resultados o guardarlos.</p>
+                <p>Responder las preguntas, al final podrás ver cuanta agua has usado. recuerda enviar los resultados al mail huinganalaguainput@gmail.com</p>
             </div>
             
             <form id="water-survey"></form>
@@ -355,6 +355,7 @@
         
         <footer>
             <p>Esta encuesta fué hecha por Benjamín Amenábar y Cristobal Cerda.</p>
+	    <p>Actualmente el sistema de enviado no está funcionando, guarde el archivo y envielo a huinganalaguainput@gmail.com
         </footer>
     </div>
 
@@ -665,50 +666,45 @@ function calculateTotal() {
 }
 
 async function sendResults() {
-    if (currentTotal === 0) {
+    if (typeof currentTotal === "undefined" || currentTotal === 0) {
         alert("Por favor, primero calcula tu consumo usando el botón 'Calcular Consumo'");
         return;
     }
 
-    let bodyText = "Resultados de la encuesta:\n";
+    // Construir el CSV o texto del cuerpo
+    let csv = "Pregunta,Respuesta\n";
     questions.forEach(q => {
         if (answers[q.id] !== undefined) {
             const answer = Array.isArray(answers[q.id]) ? answers[q.id].join(', ') : answers[q.id];
-            bodyText += `${q.text}: ${answer}\n`;
+            csv += `"${q.text.replace(/"/g, '""')}","${answer}"\n`;
         }
         if (q.dynamicQuestion && answers[q.dynamicQuestion.id] !== undefined) {
-            bodyText += `${q.dynamicQuestion.text}: ${answers[q.dynamicQuestion.id]}\n`;
+            csv += `"${q.dynamicQuestion.text.replace(/"/g, '""')}","${answers[q.dynamicQuestion.id]}"\n`;
         }
         if (q.dynamicQuestions) {
             q.dynamicQuestions.forEach(dq => {
                 if (answers[dq.id] !== undefined) {
-                    bodyText += `${dq.text}: ${answers[dq.id]}\n`;
+                    csv += `"${dq.text.replace(/"/g, '""')}","${answers[dq.id]}"\n`;
                 }
             });
         }
     });
-    bodyText += `\nConsumo total diario: ${currentTotal.toFixed(0)} litros`;
 
-    // Enviar el trigger al workflow de GitHub
-    const token = "TU_PERSONAL_ACCESS_TOKEN"; // ⚠️ NO DEBE ESTAR EN CLIENTE FINAL
+    csv += `\n"Consumo total diario","${currentTotal.toFixed(0)} litros"\n`;
 
-    await fetch("https://api.github.com/repos/USUARIO/REPO/actions/workflows/send_email.yml/dispatches", {
-        method: "POST",
-        headers: {
-            "Accept": "application/vnd.github+json",
-            "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-            ref: "main",
-            inputs: {
-                subject: "Resultados Encuesta Uso de Agua",
-                body: bodyText
-            }
-        })
-    });
+    // Codificar el texto para URL (para mailto)
+    const encodedBody = encodeURIComponent(csv);
 
-    alert("Los resultados han sido enviados correctamente.");
+    // Armar el mailto
+    const mailtoLink = `mailto:huinganalaguainput@gmail.com?subject=Resultados%20Encuesta%20Uso%20de%20Agua&body=${encodedBody}`;
+
+    // Abrir el cliente de correo
+    window.location.href = mailtoLink;
+
+    // Mostrar mensaje opcional
+    alert("Se abrirá tu aplicación de correo con los resultados listos para enviar.");
 }
+
 function saveResults() {
     if (currentTotal === 0) {
         alert("Por favor, primero calcula tu consumo usando el botón 'Calcular Consumo'");
